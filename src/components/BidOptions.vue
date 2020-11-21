@@ -1,7 +1,7 @@
 <template>
   <div class="overflow-hidden top-0 left-0 relative h-screen w-screen">
     <div
-      class="absolute left-0 top-0 h-screen w-screen bg-black opacity-75"
+      class="absolute left-0 top-0 h-screen w-screen bg-black opacity-25"
     ></div>
     <div
       class="absolute top-1/2 left-1/2 h-64 w-64 bg-white shadow-xl rounded transform -translate-x-1/2 -translate-y-1/2"
