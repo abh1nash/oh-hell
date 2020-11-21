@@ -66,8 +66,8 @@ export default {
   display: flex;
   flex-direction: column;
 
-  @media (min-width: 992px) {
-    // height: 700px;
+  @media (min-width: 1024px) {
+    height: 768px;
     width: 700px;
   }
 
