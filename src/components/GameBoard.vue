@@ -43,16 +43,20 @@
           ]"
         />
       </div>
+      <div v-if="false" class="fixed left-0 top-0">
+        <bid-options />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import BidOptions from "./BidOptions";
 import CardsContainer from "./CardsContainer";
 import TrumpCardIcon from "./TrumpCardIcon";
 import PlayArea from "./PlayArea";
 export default {
-  components: { CardsContainer, TrumpCardIcon, PlayArea },
+  components: { CardsContainer, TrumpCardIcon, PlayArea, BidOptions },
 };
 </script>
 
