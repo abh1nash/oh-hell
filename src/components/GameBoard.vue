@@ -8,7 +8,7 @@
           <div class="self-center">
             <span class="text-xs">Trump</span>
             <div class="block text-center">
-              <trump-card-icon card="C" class="mx-auto" />
+              <trump-card-icon :card="trump" class="mx-auto" />
             </div>
           </div>
         </div>
@@ -25,25 +25,9 @@
       </div>
       <play-area class="flex-grow flex-shrink" />
       <div class="player-cards">
-        <cards-container
-          :cards="[
-            'S-13',
-            'D-12',
-            'H-12',
-            'C-2',
-            'S-14',
-            'C-3',
-            'H-14',
-            'C-14',
-            'H-7',
-            'D-4',
-            'H-2',
-            'D-2',
-            'C-13',
-          ]"
-        />
+        <cards-container :cards="cards" />
       </div>
-      <div v-if="false" class="fixed left-0 top-0">
+      <div v-if="isBiddingTurn" class="fixed left-0 top-0">
         <bid-options />
       </div>
     </div>
@@ -55,8 +39,50 @@ import BidOptions from "./BidOptions";
 import CardsContainer from "./CardsContainer";
 import TrumpCardIcon from "./TrumpCardIcon";
 import PlayArea from "./PlayArea";
+import { mapActions, mapState, mapGetters } from "vuex";
 export default {
   components: { CardsContainer, TrumpCardIcon, PlayArea, BidOptions },
+  props: { gameId: String },
+  sockets: {
+    startBid({ startFrom, turns, cards, trump }) {
+      this.setGameTurns({ startFrom, turns });
+      this.setBidStatus(true);
+      this.setTrump(trump);
+    },
+    dealtCards({ cards }) {
+      this.setNewHand({ cards });
+    },
+    changeTurn({ turn }) {
+      this.setTurn(turn);
+    },
+    biddingComplete() {
+      this.setBidStatus(false);
+    },
+    playerBids({ bids }) {
+      this.setHandBids(bids);
+    },
+  },
+  computed: {
+    ...mapState({
+      cards: (state) => state.game.cardsCurrent,
+      bidding: (state) => state.bidding.isActive,
+      trump: (state) => (state.game.hand ? state.game.hand.trump : null),
+    }),
+    ...mapGetters({ isBiddingTurn: "isBiddingTurn" }),
+  },
+  methods: {
+    ...mapActions({
+      setGameTurns: "setGameTurns",
+      setNewHand: "setNewHand",
+      setBidStatus: "setBidStatus",
+      setTurn: "changeTurn",
+      setHandBids: "setHandBids",
+      setTrump: "setTrump",
+    }),
+  },
+  mounted() {
+    this.$socket.emit("gameStart", { gameId: this.gameId });
+  },
 };
 </script>
 

@@ -49,7 +49,7 @@ export default {
       console.log("Connected to game server.");
     },
     createdGame: function (msg) {
-      this.$router.push({ name: "Game", params: { id: msg.id } });
+      this.$router.push({ name: "Wait", params: { id: msg.id } });
     },
   },
   methods: {

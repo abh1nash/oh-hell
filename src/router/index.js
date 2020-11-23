@@ -11,11 +11,16 @@ const routes = [
     component: Home,
   },
   {
-    path: "/game/:id",
+    path: "/wait/:id",
+    props: true,
+    name: "Wait",
+    component: () => import("../views/Wait.vue"),
+  },
+  {
+    path: "/game/:gameId",
     props: true,
     name: "Game",
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/Game.vue"),
+    component: () => import("../views/Game.vue"),
   },
 ];
 

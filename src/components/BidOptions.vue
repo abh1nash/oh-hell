@@ -9,11 +9,13 @@
       <div class="text-center p-4 font-bold">Select your bid</div>
       <div class="grid grid-cols-4 px-2">
         <button
-          class="col-auto p-2 text-center font-bold hover:bg-blue-500 hover:text-white rounded disabled:text-gray-300"
-          v-for="i in 13"
-          :key="i"
+          :disabled="!isAvailableBid(index)"
+          @click="setBid(index)"
+          class="col-auto p-2 text-center font-bold hover:bg-blue-500 hover:text-white rounded disabled:text-gray-500 disabled:opacity-25 disabled:cursor-not-allowed"
+          v-for="(_, index) in bidValues"
+          :key="index"
         >
-          {{ i }}
+          {{ index }}
         </button>
       </div>
     </div>
@@ -21,7 +23,48 @@
 </template>
 
 <script>
-export default {};
+import { mapState } from "vuex";
+export default {
+  data() {
+    return {
+      unavailableBids: [],
+    };
+  },
+  sockets: {
+    unavailableBids({ unavailable }) {
+      this.unavailableBids = unavailable;
+    },
+  },
+  computed: {
+    ...mapState({
+      cardsCurrent: (state) => state.game.cardsCurrent,
+      gameId: (state) => state.game.id,
+      playerId: (state) => state.player.id,
+    }),
+    bidValues() {
+      return this.cardsCurrent
+        ? Array(this.cardsCurrent.length + 1).fill(0)
+        : [];
+    },
+  },
+  methods: {
+    isAvailableBid(value) {
+      return this.unavailableBids
+        ? !this.unavailableBids.includes(value)
+        : true;
+    },
+    setBid(value) {
+      if (!this.isAvailableBid(value)) return;
+      this.$socket.emit("setBid", {
+        gameId: this.gameId,
+        bid: value,
+      });
+    },
+  },
+  mounted() {
+    this.$socket.emit("checkUnavailableBids");
+  },
+};
 </script>
 
 <style>
