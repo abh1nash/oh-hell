@@ -10,23 +10,37 @@
       :src="card"
     />
     <div
-      v-if="!disableSelection && name != 'hidden'"
+      @click="throwCard"
+      v-if="
+        !disableSelection && name != 'hidden' && !bidMode && turn == playerId
+      "
       class="absolute cursor-pointer top-0 left-0 h-full w-full hover:bg-yellow-200 rounded-lg opacity-25"
     ></div>
   </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   props: {
     name: { type: String, default: "hidden" },
     disableSelection: Boolean,
   },
   computed: {
+    ...mapState({
+      turn: (state) => state.game.turn,
+      playerId: (state) => state.player.id,
+      bidMode: (state) => state.game.bidding.isActive,
+    }),
     card() {
       const images = require.context("../assets/images/cards", false, /\.png$/);
       if (this.name == "hidden") return images("./purple_back.png");
       return images("./" + this.name.split("-").reverse().join("") + ".png");
+    },
+  },
+  methods: {
+    throwCard() {
+      this.$socket.emit("throwCard", { card: this.name });
     },
   },
 };

@@ -25,7 +25,7 @@
       </div>
       <play-area class="flex-grow flex-shrink" />
       <div class="player-cards">
-        <cards-container :cards="cards" />
+        <cards-container :cards="cards" :throwable="throwable" />
       </div>
       <div v-if="isBiddingTurn" class="fixed left-0 top-0">
         <bid-options />
@@ -43,6 +43,11 @@ import { mapActions, mapState, mapGetters } from "vuex";
 export default {
   components: { CardsContainer, TrumpCardIcon, PlayArea, BidOptions },
   props: { gameId: String },
+  data() {
+    return {
+      throwable: [],
+    };
+  },
   sockets: {
     startBid({ startFrom, turns, cards, trump }) {
       this.setGameTurns({ startFrom, turns });
@@ -54,6 +59,7 @@ export default {
     },
     changeTurn({ turn }) {
       this.setTurn(turn);
+      this.getThrowableCards();
     },
     biddingComplete() {
       this.setBidStatus(false);
@@ -64,13 +70,18 @@ export default {
     playersInfo({ players }) {
       this.setPlayersInfo(players);
     },
+    throwableCards({ throwable }) {
+      this.throwable = throwable;
+    },
   },
   computed: {
     ...mapState({
       cards: (state) => state.game.cardsCurrent,
-      bidding: (state) => state.bidding.isActive,
+      bidding: (state) => (state.bidding ? state.bidding.isActive : null),
       trump: (state) => (state.game.hand ? state.game.hand.trump : null),
       players: (state) => state.game.players,
+      turn: (state) => state.game.turn,
+      playerId: (state) => state.player.id,
     }),
     ...mapGetters({ isBiddingTurn: "isBiddingTurn" }),
     playersList() {
@@ -96,6 +107,11 @@ export default {
             : truncatedName;
       }
       return truncatedName;
+    },
+    getThrowableCards() {
+      if (!this.bidding && this.turn == this.playerId) {
+        this.$socket.emit("getThrowableCards", { gameId: this.gameId });
+      }
     },
   },
   mounted() {
