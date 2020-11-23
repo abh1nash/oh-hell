@@ -15,7 +15,17 @@ export function SET_GAME(state, id) {
 
 export function SET_GAME_TURNS(state, payload) {
   Vue.set(state.game, "turn", payload.startFrom);
-  Vue.set(state.game, "turns", payload.turns);
+
+  let turns = [];
+  let player = state.player.id;
+  let index = payload.turns.indexOf(player);
+  if (index > -1) {
+    turns = [
+      ...payload.turns.splice(index, payload.turns.length - index),
+      ...payload.turns,
+    ];
+  }
+  Vue.set(state.game, "turns", turns);
 }
 
 export function SET_NEW_HAND(state, cards) {
@@ -45,5 +55,13 @@ export function SET_HAND_BIDS(state, bids) {
   if (!state.game.hand.bids) Vue.set(state.game.hand, "bids", {});
   Object.entries(bids).forEach((bid) => {
     Vue.set(state.game.hand.bids, bid[0], bid[1]);
+  });
+}
+
+export function SET_PLAYERS_INFO(state, playersList) {
+  if (!state.game.players) Vue.set(state.game, "players", {});
+
+  playersList.forEach((player) => {
+    Vue.set(state.game.players, player.id, player);
   });
 }

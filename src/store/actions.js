@@ -29,3 +29,7 @@ export function changeTurn({ commit }, playerId) {
 export function setHandBids({ commit }, bids) {
   commit("SET_HAND_BIDS", bids);
 }
+
+export function setPlayersInfo({ commit }, playersList) {
+  commit("SET_PLAYERS_INFO", playersList);
+}

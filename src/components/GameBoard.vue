@@ -14,12 +14,12 @@
         </div>
         <div class="w-10/12 h-full flex">
           <div
-            v-for="i in 7"
-            :key="i"
+            v-for="player in playersList"
+            :key="player.id"
             class="py-1 w-1/2 text-center self-center text-green-800"
           >
-            <div class="text-xs">Abhinash</div>
-            <div class="font-bold text-sm">300</div>
+            <div class="text-xs">{{ truncateName(player.name) }}</div>
+            <div class="font-bold text-sm">{{ player.score }}</div>
           </div>
         </div>
       </div>
@@ -61,14 +61,21 @@ export default {
     playerBids({ bids }) {
       this.setHandBids(bids);
     },
+    playersInfo({ players }) {
+      this.setPlayersInfo(players);
+    },
   },
   computed: {
     ...mapState({
       cards: (state) => state.game.cardsCurrent,
       bidding: (state) => state.bidding.isActive,
       trump: (state) => (state.game.hand ? state.game.hand.trump : null),
+      players: (state) => state.game.players,
     }),
     ...mapGetters({ isBiddingTurn: "isBiddingTurn" }),
+    playersList() {
+      return Object.values(this.players);
+    },
   },
   methods: {
     ...mapActions({
@@ -78,10 +85,22 @@ export default {
       setTurn: "changeTurn",
       setHandBids: "setHandBids",
       setTrump: "setTrump",
+      setPlayersInfo: "setPlayersInfo",
     }),
+    truncateName(name) {
+      let truncatedName = name;
+      if (this.playersList.length > 4) {
+        truncatedName =
+          truncatedName.length > this.playersList.length - 4
+            ? truncatedName.substring(0, this.playersLength - 4) + "..."
+            : truncatedName;
+      }
+      return truncatedName;
+    },
   },
   mounted() {
     this.$socket.emit("gameStart", { gameId: this.gameId });
+    this.$socket.emit("gamePlayers", { gameId: this.gameId });
   },
 };
 </script>
