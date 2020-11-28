@@ -33,3 +33,7 @@ export function setHandBids({ commit }, bids) {
 export function setPlayersInfo({ commit }, playersList) {
   commit("SET_PLAYERS_INFO", playersList);
 }
+
+export function setPlayerTricks({ commit }, tricks) {
+  commit("SET_PLAYER_TRICKS", tricks);
+}

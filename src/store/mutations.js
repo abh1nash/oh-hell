@@ -65,3 +65,14 @@ export function SET_PLAYERS_INFO(state, playersList) {
     Vue.set(state.game.players, player.id, player);
   });
 }
+
+export function SET_PLAYER_TRICKS(state, tricks) {
+  if (!state.game.hand.tricks) Vue.set(state.game.hand, "tricks", {});
+  if (Object.keys(tricks).length < 1) {
+    Vue.set(state.game.hand, "tricks", {});
+    return;
+  }
+  Object.entries(tricks).forEach((entry) => {
+    Vue.set(state.game.hand.tricks, entry[0], entry[1]);
+  });
+}

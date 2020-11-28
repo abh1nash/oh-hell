@@ -25,6 +25,22 @@
       </div>
       <play-area class="flex-grow flex-shrink" />
       <div class="player-cards">
+        <div class="w-full h-2 mb-5 mx-auto text-center text-white block">
+          <span>{{ currentPlayer.name }}</span>
+          <span
+            class="rounded inline p-1 pr-2 ml-1 bg-white text-green-700 font-bold"
+          >
+            {{
+              hand.tricks && hand.tricks[currentPlayer.id]
+                ? hand.tricks[currentPlayer.id]
+                : 0
+            }}/{{
+              hand.bids && hand.bids[currentPlayer.id]
+                ? hand.bids[currentPlayer.id]
+                : 0
+            }}
+          </span>
+        </div>
         <cards-container :cards="cards" :throwable="throwable" />
       </div>
       <div v-if="isBiddingTurn" class="fixed left-0 top-0">
@@ -73,19 +89,31 @@ export default {
     throwableCards({ throwable }) {
       this.throwable = throwable;
     },
+    roundComplete({ tricks }) {
+      this.setPlayerTricks(tricks);
+    },
+    handComplete() {
+      setTimeout(() => {
+        this.setPlayerTricks({});
+
+        this.$socket.emit("gameStart", { gameId: this.gameId });
+      }, 2000);
+    },
   },
   computed: {
     ...mapState({
       cards: (state) => state.game.cardsCurrent,
       bidding: (state) => (state.bidding ? state.bidding.isActive : null),
       trump: (state) => (state.game.hand ? state.game.hand.trump : null),
+      hand: (state) => state.game.hand,
       players: (state) => state.game.players,
       turn: (state) => state.game.turn,
       playerId: (state) => state.player.id,
+      currentPlayer: (state) => state.player,
     }),
     ...mapGetters({ isBiddingTurn: "isBiddingTurn" }),
     playersList() {
-      return Object.values(this.players);
+      return this.players ? Object.values(this.players) : [];
     },
   },
   methods: {
@@ -97,6 +125,7 @@ export default {
       setHandBids: "setHandBids",
       setTrump: "setTrump",
       setPlayersInfo: "setPlayersInfo",
+      setPlayerTricks: "setPlayerTricks",
     }),
     truncateName(name) {
       let truncatedName = name;
