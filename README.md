@@ -1,19 +1,33 @@
-# oh-hell-client
+# Oh Hell! Card Game
+
+Very basic implementation of the card game _Oh Hell!_ for upto seven people.
 
 ## Project setup
+
 ```
 npm install
 ```
 
 ### Compiles and hot-reloads for development
+
 ```
 npm run serve
 ```
 
+### Run server
+
+```
+npm run server
+```
+
 ### Compiles and minifies for production
+
 ```
 npm run build
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### For deployment
+
+```
+npm run start
+```
