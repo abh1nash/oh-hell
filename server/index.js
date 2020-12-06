@@ -9,9 +9,11 @@ const io = require("socket.io")(server, {
   },
 });
 const cors = require("cors");
+const history = require("connect-history-api-fallback");
 
 const Game = require("./Game");
 
+app.use(history());
 app.use(cors());
 app.use(express.json());
 app.use(express.static("dist"));
