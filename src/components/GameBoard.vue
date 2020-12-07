@@ -198,7 +198,7 @@ export default {
   .player-cards {
     // position: absolute;
     // bottom: 0;
-    height: 200px;
+    height: 120px;
     width: 100%;
     margin: 0 auto;
     @media (min-width: 992px) {
