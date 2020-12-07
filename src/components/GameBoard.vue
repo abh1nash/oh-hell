@@ -43,8 +43,11 @@
         </div>
         <cards-container :cards="cards" :throwable="throwable" />
       </div>
-      <div v-if="isBiddingTurn" class="fixed left-0 top-0">
+      <div v-if="isBiddingTurn && !gameComplete" class="fixed left-0 top-0">
         <bid-options />
+      </div>
+      <div v-if="gameComplete" class="fixed left-0 top-0 z-10">
+        <winner-announce />
       </div>
     </div>
   </div>
@@ -52,16 +55,24 @@
 
 <script>
 import BidOptions from "./BidOptions";
+import WinnerAnnounce from "./WinnerAnnounce";
 import CardsContainer from "./CardsContainer";
 import TrumpCardIcon from "./TrumpCardIcon";
 import PlayArea from "./PlayArea";
 import { mapActions, mapState, mapGetters } from "vuex";
 export default {
-  components: { CardsContainer, TrumpCardIcon, PlayArea, BidOptions },
+  components: {
+    CardsContainer,
+    TrumpCardIcon,
+    PlayArea,
+    BidOptions,
+    WinnerAnnounce,
+  },
   props: { gameId: String },
   data() {
     return {
       throwable: [],
+      gameComplete: false,
     };
   },
   sockets: {
@@ -98,6 +109,9 @@ export default {
 
         this.$socket.emit("gameStart", { gameId: this.gameId });
       }, 2000);
+    },
+    gameComplete() {
+      this.gameComplete = true;
     },
   },
   computed: {
