@@ -76,3 +76,8 @@ export function SET_PLAYER_TRICKS(state, tricks) {
     Vue.set(state.game.hand.tricks, entry[0], entry[1]);
   });
 }
+
+export function RESET_GAME(state) {
+  Vue.set(state, "game", {});
+  Vue.set(state.game, "id", null);
+}

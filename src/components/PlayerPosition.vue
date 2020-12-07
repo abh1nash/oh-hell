@@ -2,7 +2,10 @@
   <div class="flex flex-wrap-reverse">
     <cards-container
       :cards="monitoredPlayer.cardsOnHand"
-      class="max-h-full w-full"
+      :class="[
+        'max-h-full w-full',
+        { 'animate-pulse': currentTurn == monitoredPlayer.id },
+      ]"
       :vertical="vertical"
     />
     <div class="w-full text-xs text-center text-white my-2 md:mt-5">
@@ -27,6 +30,7 @@ export default {
       hand: (state) => state.game.hand,
       turns: (state) => state.game.turns,
       players: (state) => state.game.players,
+      currentTurn: (state) => state.game.turn,
     }),
     monitoredPlayer() {
       let playersCount = Object.keys(this.players).length;

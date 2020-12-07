@@ -37,3 +37,7 @@ export function setPlayersInfo({ commit }, playersList) {
 export function setPlayerTricks({ commit }, tricks) {
   commit("SET_PLAYER_TRICKS", tricks);
 }
+
+export function resetGame({ commit }) {
+  commit("RESET_GAME");
+}

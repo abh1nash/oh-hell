@@ -2,7 +2,11 @@ module.exports = {
   purge: ["./src/**/*"],
   darkMode: false, // or 'media' or 'class'
   theme: {
-    extend: {},
+    extend: {
+      animation: {
+        "ping-slow": "ping 3s linear infinite",
+      },
+    },
   },
   variants: {
     extend: {

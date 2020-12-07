@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapActions, mapState } from "vuex";
 export default {
   props: {
     name: { type: String, default: "hidden" },
@@ -39,7 +39,9 @@ export default {
     },
   },
   methods: {
+    ...mapActions({ setTurn: "setTurn" }),
     throwCard() {
+      this.setTurn("");
       this.$socket.emit("throwCard", { card: this.name });
     },
   },

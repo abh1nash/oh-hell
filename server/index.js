@@ -99,7 +99,7 @@ io.on("connection", (socket) => {
       setTimeout(() => {
         io.to(game.id).emit("thrownCards", {
           thrownCards: game.roundThrows,
-        });
+        }); //this empties the thrown cards
       }, 2000);
     }
   });

@@ -42,7 +42,11 @@ export default {
     }),
   },
   methods: {
-    ...mapActions({ setPlayer: "setPlayer", setGame: "setGame" }),
+    ...mapActions({
+      setPlayer: "setPlayer",
+      setGame: "setGame",
+      resetGame: "resetGame",
+    }),
   },
   created() {
     this.$socket.emit("gameExists", { id: this.gameId });
@@ -50,6 +54,7 @@ export default {
   beforeDestroy() {
     let name, id;
     this.setPlayer({ name, id });
+    this.resetGame();
   },
 };
 </script>

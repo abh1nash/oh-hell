@@ -25,6 +25,12 @@
       </div>
       <play-area class="flex-grow flex-shrink" />
       <div class="player-cards">
+        <div
+          v-if="turn == playerId && !gameComplete"
+          class="text-center text-white animate-ping-slow font-bold uppercase opacity absolute left-1/2 -mt-10 -ml-12"
+        >
+          Your Turn
+        </div>
         <div class="w-full h-2 mb-5 mx-auto text-center text-white block">
           <span>{{ currentPlayer.name }}</span>
           <span

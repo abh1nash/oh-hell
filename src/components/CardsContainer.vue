@@ -7,7 +7,7 @@
   >
     <single-card
       v-for="card in sortedCards"
-      :disableSelection="!isThrowable(card)"
+      :disableSelection="disableSelection || !isThrowable(card)"
       :name="typeof card == 'string' ? card : undefined"
       :key="card"
       :class="[vertical ? '-mt-14 vertical-card' : '-ml-6']"
@@ -21,6 +21,7 @@ export default {
   components: { SingleCard },
   props: {
     cards: { type: [Array, Number] },
+    disableSelection: { type: Boolean },
     vertical: Boolean,
     throwable: Array,
   },
