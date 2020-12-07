@@ -77,6 +77,17 @@ export function SET_PLAYER_TRICKS(state, tricks) {
   });
 }
 
+export function SET_THROWN_CARDS(state, thrownCards) {
+  if (!state.game.thrownCards || Object.keys(thrownCards).length < 1) {
+    Vue.set(state.game, "thrownCards", {});
+    return;
+  }
+
+  Object.entries(thrownCards).forEach((entry) => {
+    Vue.set(state.game.thrownCards, entry[0], entry[1]);
+  });
+}
+
 export function RESET_GAME(state) {
   Vue.set(state, "game", {});
   Vue.set(state.game, "id", null);

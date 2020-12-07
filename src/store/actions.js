@@ -38,6 +38,10 @@ export function setPlayerTricks({ commit }, tricks) {
   commit("SET_PLAYER_TRICKS", tricks);
 }
 
+export function setThrownCards({ commit }, thrownCards) {
+  commit("SET_THROWN_CARDS", thrownCards);
+}
+
 export function resetGame({ commit }) {
   commit("RESET_GAME");
 }

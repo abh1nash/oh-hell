@@ -146,7 +146,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapActions, mapState } from "vuex";
 import PlayerPosition from "./PlayerPosition.vue";
 import SingleCard from "./SingleCard.vue";
 export default {
@@ -162,27 +162,29 @@ export default {
         "6/6 7/7", //right bottom
         "1/2 1/3 1/4 1/5 1/6 1/7", //current player
       ],
-      thrownCards: {},
     };
   },
   sockets: {
     thrownCards({ thrownCards }) {
-      if (Object.keys(thrownCards).length < 1) {
-        this.$set(this, "thrownCards", {});
-        return;
-      }
-      Object.entries(thrownCards).forEach((entry) => {
-        this.$set(this.thrownCards, entry[0], entry[1]);
-      });
+      // if (Object.keys(thrownCards).length < 1) {
+      //   this.$set(this, "thrownCards", {});
+      //   return;
+      // }
+      // Object.entries(thrownCards).forEach((entry) => {
+      //   this.$set(this.thrownCards, entry[0], entry[1]);
+      // });
+      this.setThrownCards(thrownCards);
     },
   },
   computed: {
     ...mapState({
+      thrownCards: (state) => state.game.thrownCards || {},
       players: (state) => state.game.players,
       turnList: (state) => state.game.turns,
     }),
   },
   methods: {
+    ...mapActions({ setThrownCards: "setThrownCards" }),
     isDisplayablePosition(positionString) {
       // position string denotes the position of
       // a player out of total number of players
@@ -194,6 +196,7 @@ export default {
         // string and check if that is equal to
         // the current players count
         if (
+          this.players &&
           Object.keys(this.players).length == parseInt(position.split("/")[1])
         )
           flag = true;

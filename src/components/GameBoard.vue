@@ -26,7 +26,12 @@
       <play-area class="flex-grow flex-shrink" />
       <div class="player-cards">
         <div
-          v-if="turn == playerId && !gameComplete"
+          v-if="
+            turn == playerId &&
+            !gameComplete &&
+            !!thrownCards &&
+            !thrownCards[playerId]
+          "
           class="text-center text-white animate-ping-slow font-bold uppercase opacity absolute left-1/2 -mt-10 -ml-12"
         >
           Your Turn
@@ -47,7 +52,11 @@
             }}
           </span>
         </div>
-        <cards-container :cards="cards" :throwable="throwable" />
+        <cards-container
+          :cards="cards"
+          :throwable="throwable"
+          :disableSelection="!!thrownCards && !!thrownCards[playerId]"
+        />
       </div>
       <div v-if="isBiddingTurn && !gameComplete" class="fixed left-0 top-0">
         <bid-options />
@@ -126,6 +135,7 @@ export default {
       bidding: (state) => (state.bidding ? state.bidding.isActive : null),
       trump: (state) => (state.game.hand ? state.game.hand.trump : null),
       hand: (state) => state.game.hand,
+      thrownCards: (state) => state.game.thrownCards,
       players: (state) => state.game.players,
       turn: (state) => state.game.turn,
       playerId: (state) => state.player.id,

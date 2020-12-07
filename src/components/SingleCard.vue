@@ -39,7 +39,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions({ setTurn: "setTurn" }),
+    ...mapActions({ setTurn: "changeTurn" }),
     throwCard() {
       this.setTurn("");
       this.$socket.emit("throwCard", { card: this.name });
