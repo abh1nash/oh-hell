@@ -2,7 +2,7 @@
   <div
     :class="[
       'card-image-container relative',
-      name == 'hidden' ? 'max-h-full' : 'h-24 w-16',
+      name == 'hidden' ? 'hidden-card max-h-full' : 'h-24 w-16',
     ]"
   >
     <img
@@ -35,7 +35,14 @@ export default {
     card() {
       const images = require.context("../assets/images/cards", false, /\.png$/);
       if (this.name == "hidden") return images("./purple_back.png");
-      return images("./" + this.name.split("-").reverse().join("") + ".png");
+      return images(
+        "./" +
+          this.name
+            .split("-")
+            .reverse()
+            .join("") +
+          ".png"
+      );
     },
   },
   methods: {
@@ -52,7 +59,10 @@ export default {
 .card-image-container {
   height: 100%;
   width: 100%;
-  max-width: 6rem;
+  max-width: 4.5rem;
+  &.hidden-card:before {
+    display: none;
+  }
   &:not(.vertical-card):before {
     content: "";
     position: absolute;

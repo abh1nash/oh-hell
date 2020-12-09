@@ -23,6 +23,7 @@
           </div>
         </div>
       </div>
+      <thrown-history :throws="thrownCards"/>
       <play-area class="flex-grow flex-shrink" />
       <div class="player-cards">
         <div
@@ -75,6 +76,7 @@ import CardsContainer from "./CardsContainer";
 import TrumpCardIcon from "./TrumpCardIcon";
 import PlayArea from "./PlayArea";
 import { mapActions, mapState, mapGetters } from "vuex";
+import ThrownHistory from './ThrownHistory.vue';
 export default {
   components: {
     CardsContainer,
@@ -82,6 +84,7 @@ export default {
     PlayArea,
     BidOptions,
     WinnerAnnounce,
+    ThrownHistory
   },
   props: { gameId: String },
   data() {
@@ -198,7 +201,7 @@ export default {
   .player-cards {
     // position: absolute;
     // bottom: 0;
-    height: 120px;
+    height: 150px;
     width: 100%;
     margin: 0 auto;
     @media (min-width: 992px) {

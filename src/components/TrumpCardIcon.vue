@@ -1,7 +1,7 @@
 <template>
   <component
     :is="cardIcon"
-    size="24"
+    :size="size || 24"
     weight="fill"
     :color="card == 'H' || card == 'D' ? '#B91C1C' : 'black'"
   />
@@ -10,7 +10,7 @@
 <script>
 import { PhX, PhHeartStraight, PhClub, PhSpade, PhDiamond } from "phosphor-vue";
 export default {
-  props: { card: String },
+  props: { card: String, size: Number },
   computed: {
     cardIcon() {
       switch (this.card) {
@@ -30,5 +30,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>
