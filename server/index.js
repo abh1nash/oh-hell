@@ -127,6 +127,7 @@ io.on("connection", (socket) => {
   }
 
   socket.on("gameExists", ({ id }) => {
+    if (game.id == id) socket.join(id);
     socket.emit("gameExistence", {
       id,
       requestId: socket.id,
