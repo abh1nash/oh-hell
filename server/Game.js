@@ -152,7 +152,7 @@ class Game {
     Object.entries(this.roundThrows).forEach((entry) => {
       let curVal = 0;
       if (entry[1].charAt(0) == this.handTrump)
-        curVal = 10 + parseInt(entry[1].split("-")[1]);
+        curVal = 20 + parseInt(entry[1].split("-")[1]);
       if (
         entry[1].charAt(0) != this.handTrump &&
         entry[1].charAt(0) == this.roundFirstCard.charAt(0)
@@ -173,6 +173,7 @@ class Game {
 
   evaluateHand() {
     Object.keys(this.players).forEach((id) => {
+      if (!this.handTricks[id]) this.handTricks[id] = "0";
       if (this.handBids[id] == this.handTricks[id])
         this.addScore(id, 10 + this.handBids[id]);
     });
