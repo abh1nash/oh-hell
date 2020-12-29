@@ -43,11 +43,11 @@
             class="rounded inline p-1 pr-2 ml-1 bg-white text-green-700 font-bold"
           >
             {{
-              hand.tricks && hand.tricks[currentPlayer.id]
+              hand && hand.tricks && hand.tricks[currentPlayer.id]
                 ? hand.tricks[currentPlayer.id]
                 : 0
             }}/{{
-              hand.bids && hand.bids[currentPlayer.id]
+              hand && hand.bids && hand.bids[currentPlayer.id]
                 ? hand.bids[currentPlayer.id]
                 : 0
             }}
