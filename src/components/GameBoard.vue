@@ -18,7 +18,7 @@
             :key="player.id"
             class="py-1 w-1/2 text-center self-center text-green-800"
           >
-            <div class="text-xs">{{ truncateName(player.name) }}</div>
+            <div class="text-xs">{{ player.name }}</div>
             <div class="font-bold text-sm">{{ player.score }}</div>
           </div>
         </div>
