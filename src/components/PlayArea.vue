@@ -154,14 +154,14 @@ export default {
   data() {
     return {
       playerPositions: [
-        "4/5 5/7", //top right
         "2/2 3/4 3/5 4/6 4/7", //top left
+        "4/5 5/7", //top right
         
         "3/6 3/7", //left bottom
-        "2/3 2/4 2/6 2/7", //left top
+        "2/3 2/5 2/4 2/6 2/7", //left top
         
-        "6/6 7/7", //right bottom
         "3/3 4/4 5/5 5/6 6/7", //right top
+        "6/6 7/7", //right bottom
         
         "1/2 1/3 1/4 1/5 1/6 1/7", //current player
       ],
