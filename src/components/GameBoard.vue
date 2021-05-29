@@ -1,186 +1,59 @@
 <template>
   <div class="h-full w-full bg-green-600 flex items-center justify-center">
     <div class="game-area">
-      <div class="h-20 w-full bg-green-300 flex">
+      <div class="h-14 w-full bg-green-300 flex">
         <div
           class="font-bold text-green-700 text-center bg-white uppercase w-1/6 justify-center flex"
         >
           <div class="self-center">
             <span class="text-xs">Trump</span>
             <div class="block text-center">
-              <trump-card-icon :card="trump" class="mx-auto" />
+              <card-icon :card="trump" class="mx-auto" />
             </div>
           </div>
         </div>
-        <div class="w-10/12 h-full flex">
+        <div v-if="playersList" class="w-10/12 h-full flex">
           <div
-            v-for="player in playersList"
-            :key="player.id"
+            v-for="(player, index) in playersList"
+            :key="index"
             class="py-1 w-1/2 text-center self-center text-green-800"
           >
-            <div class="text-xs">{{ truncateName(player.name) }}</div>
+            <div class="text-xs">{{ player.name }}</div>
             <div class="font-bold text-sm">{{ player.score }}</div>
           </div>
         </div>
       </div>
-      <thrown-history :throws="thrownCards"/>
-      <play-area class="flex-grow flex-shrink" />
-      <div class="player-cards">
-        <div
-          v-if="
-            turn == playerId &&
-            !gameComplete &&
-            !!thrownCards &&
-            !thrownCards[playerId]
-          "
-          class="text-center text-white animate-ping-slow font-bold uppercase opacity absolute left-1/2 -mt-10 -ml-12"
-        >
-          Your Turn
-        </div>
-        <div class="w-full h-2 mb-5 mx-auto text-center text-white block">
-          <span>{{ currentPlayer.name }}</span>
-          <span
-            class="rounded inline p-1 pr-2 ml-1 bg-white text-green-700 font-bold"
-          >
-            {{
-              hand.tricks && hand.tricks[currentPlayer.id]
-                ? hand.tricks[currentPlayer.id]
-                : 0
-            }}/{{
-              hand.bids && hand.bids[currentPlayer.id]
-                ? hand.bids[currentPlayer.id]
-                : 0
-            }}
-          </span>
-        </div>
-        <cards-container
-          :cards="cards"
-          :throwable="throwable"
-          :disableSelection="!!thrownCards && !!thrownCards[playerId]"
-        />
-      </div>
-      <div v-if="isBiddingTurn && !gameComplete" class="fixed left-0 top-0">
-        <bid-options />
-      </div>
-      <div v-if="gameComplete" class="fixed left-0 top-0 z-10">
-        <winner-announce />
-      </div>
+      <thrown-history></thrown-history>
+      <game-stage></game-stage>
     </div>
+    <bid-options></bid-options>
+    <winner-announce></winner-announce>
   </div>
 </template>
 
-<script>
-import BidOptions from "./BidOptions";
-import WinnerAnnounce from "./WinnerAnnounce";
-import CardsContainer from "./CardsContainer";
-import TrumpCardIcon from "./TrumpCardIcon";
-import PlayArea from "./PlayArea";
-import { mapActions, mapState, mapGetters } from "vuex";
-import ThrownHistory from './ThrownHistory.vue';
-export default {
+<script lang="ts">
+import { defineComponent, computed } from "vue";
+import gameState from "../store";
+import CardIcon from "./CardIcon.vue";
+import GameStage from "./GameStage.vue";
+import BidOptions from "./BidOptions.vue";
+import ThrownHistory from "./ThrownHistory.vue";
+import WinnerAnnounce from "./WinnerAnnounce.vue";
+
+export default defineComponent({
   components: {
-    CardsContainer,
-    TrumpCardIcon,
-    PlayArea,
+    CardIcon,
+    GameStage,
     BidOptions,
     WinnerAnnounce,
-    ThrownHistory
+    ThrownHistory,
   },
-  props: { gameId: String },
-  data() {
-    return {
-      throwable: [],
-      gameComplete: false,
-    };
+  setup() {
+    const playersList = computed(() => gameState.playersList);
+    const trump = computed(() => gameState.trump);
+    return { playersList, trump };
   },
-  sockets: {
-    startBid({ startFrom, turns, cards, trump }) {
-      this.setGameTurns({ startFrom, turns });
-      this.setBidStatus(true);
-      this.setTrump(trump);
-    },
-    dealtCards({ cards }) {
-      this.setNewHand({ cards });
-    },
-    changeTurn({ turn }) {
-      this.setTurn(turn);
-      this.getThrowableCards();
-    },
-    biddingComplete() {
-      this.setBidStatus(false);
-    },
-    playerBids({ bids }) {
-      this.setHandBids(bids);
-    },
-    playersInfo({ players }) {
-      this.setPlayersInfo(players);
-    },
-    throwableCards({ throwable }) {
-      this.throwable = throwable;
-    },
-    roundComplete({ tricks }) {
-      this.setPlayerTricks(tricks);
-    },
-    handComplete() {
-      setTimeout(() => {
-        this.setPlayerTricks({});
-
-        this.$socket.emit("gameStart", { gameId: this.gameId });
-      }, 2000);
-    },
-    gameComplete() {
-      this.gameComplete = true;
-    },
-  },
-  computed: {
-    ...mapState({
-      cards: (state) => state.game.cardsCurrent,
-      bidding: (state) => (state.bidding ? state.bidding.isActive : null),
-      trump: (state) => (state.game.hand ? state.game.hand.trump : null),
-      hand: (state) => state.game.hand,
-      thrownCards: (state) => state.game.thrownCards,
-      players: (state) => state.game.players,
-      turn: (state) => state.game.turn,
-      playerId: (state) => state.player.id,
-      currentPlayer: (state) => state.player,
-    }),
-    ...mapGetters({ isBiddingTurn: "isBiddingTurn" }),
-    playersList() {
-      return this.players ? Object.values(this.players) : [];
-    },
-  },
-  methods: {
-    ...mapActions({
-      setGameTurns: "setGameTurns",
-      setNewHand: "setNewHand",
-      setBidStatus: "setBidStatus",
-      setTurn: "changeTurn",
-      setHandBids: "setHandBids",
-      setTrump: "setTrump",
-      setPlayersInfo: "setPlayersInfo",
-      setPlayerTricks: "setPlayerTricks",
-    }),
-    truncateName(name) {
-      let truncatedName = name;
-      if (this.playersList.length > 4) {
-        truncatedName =
-          truncatedName.length > this.playersList.length - 4
-            ? truncatedName.substring(0, this.playersLength - 4) + "..."
-            : truncatedName;
-      }
-      return truncatedName;
-    },
-    getThrowableCards() {
-      if (!this.bidding && this.turn == this.playerId) {
-        this.$socket.emit("getThrowableCards", { gameId: this.gameId });
-      }
-    },
-  },
-  mounted() {
-    this.$socket.emit("gameStart", { gameId: this.gameId });
-    this.$socket.emit("gamePlayers", { gameId: this.gameId });
-  },
-};
+});
 </script>
 
 <style lang="scss">

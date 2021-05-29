@@ -1,12 +1,8 @@
 module.exports = {
-  purge: ["./src/**/*"],
+  purge: ["./src/**/*.html", "./src/**/*.vue", "./src/**/*.jsx"],
   darkMode: false, // or 'media' or 'class'
   theme: {
-    extend: {
-      animation: {
-        "ping-slow": "ping 3s linear infinite",
-      },
-    },
+    extend: {},
   },
   variants: {
     extend: {

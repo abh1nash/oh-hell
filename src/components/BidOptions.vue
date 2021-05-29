@@ -1,5 +1,8 @@
 <template>
-  <div class="overflow-hidden top-0 left-0 relative h-screen w-screen">
+  <div
+    v-if="isBiddingTurn"
+    class="fixed overflow-hidden top-0 left-0 h-screen w-screen"
+  >
     <div
       class="absolute left-0 top-0 h-screen w-screen bg-black opacity-25"
     ></div>
@@ -22,49 +25,42 @@
   </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
-export default {
-  data() {
-    return {
-      unavailableBids: [],
+<script lang="ts">
+import { defineComponent, computed, inject } from "@vue/runtime-core";
+import { Socket } from "socket.io-client";
+import gameState from "../store";
+
+export default defineComponent({
+  setup() {
+    const bidValues = computed(() => (gameState.handCardsCount || 0) + 1);
+    const unavailableBids = computed(
+      () => gameState.currentUser?.unavailableBids
+    );
+    const isAvailableBid = (value) =>
+      unavailableBids.value ? !unavailableBids.value.includes(value) : true;
+
+    const isBiddingTurn = computed(() => {
+      return (
+        gameState.isBiddingActive &&
+        gameState.turnOf == localStorage.getItem("pid")
+      );
+    });
+
+    const socket = inject<Socket>("socket");
+
+    const setBid = (value) => {
+      if (socket) {
+        socket.emit("setBid", {
+          gameId: gameState.id,
+          playerId: localStorage.getItem("pid") || socket.id,
+          bid: value,
+        });
+      }
     };
+
+    return { isBiddingTurn, isAvailableBid, setBid, bidValues };
   },
-  sockets: {
-    unavailableBids({ unavailable }) {
-      this.unavailableBids = unavailable;
-    },
-  },
-  computed: {
-    ...mapState({
-      cardsCurrent: (state) => state.game.cardsCurrent,
-      gameId: (state) => state.game.id,
-      playerId: (state) => state.player.id,
-    }),
-    bidValues() {
-      return this.cardsCurrent
-        ? Array(this.cardsCurrent.length + 1).fill(0)
-        : [];
-    },
-  },
-  methods: {
-    isAvailableBid(value) {
-      return this.unavailableBids
-        ? !this.unavailableBids.includes(value)
-        : true;
-    },
-    setBid(value) {
-      if (!this.isAvailableBid(value)) return;
-      this.$socket.emit("setBid", {
-        gameId: this.gameId,
-        bid: value,
-      });
-    },
-  },
-  mounted() {
-    this.$socket.emit("checkUnavailableBids");
-  },
-};
+});
 </script>
 
 <style>

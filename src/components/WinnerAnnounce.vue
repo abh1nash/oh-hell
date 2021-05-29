@@ -1,5 +1,8 @@
 <template>
-  <div class="overflow-hidden top-0 left-0 relative h-screen w-screen">
+  <div
+    v-if="isGameComplete"
+    class="fixed overflow-hidden top-0 left-0 h-screen w-screen"
+  >
     <div
       class="absolute left-0 top-0 h-screen w-screen bg-black opacity-25"
     ></div>
@@ -10,12 +13,11 @@
 
       <div
         v-for="(player, index) in rank"
-        :key="player.id"
+        :key="player.name"
         :class="[
           'py-2 px-3 flex text-sm',
           { 'bg-yellow-400 text-xl font-bold': index == 0 },
           { 'bg-gray-200 text-lg': index == 1 },
-          { 'bg-red-200 text-md': index == 2 },
         ]"
       >
         <div class="w-1/6 font-bold">#{{ index + 1 }}</div>
@@ -33,18 +35,29 @@
   </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
-export default {
-  computed: {
-    ...mapState({
-      players: (state) => state.game.players,
-    }),
-    rank() {
-      return Object.values(this.players).sort((a, b) => b.score - a.score);
-    },
+<script lang="ts">
+import { defineComponent, computed } from "vue";
+import gameState from "../store";
+
+export default defineComponent({
+  setup() {
+    const isGameComplete = computed(() => gameState.isComplete);
+    const playersList = computed(() => {
+      if (gameState.playersList) {
+        return gameState.playersList.map(({ name, score }) => ({
+          name,
+          score,
+        }));
+      } else {
+        return [{ name: "", score: 0 }];
+      }
+    });
+    const rank = computed(() =>
+      playersList.value?.sort((a, b) => b.score - a.score)
+    );
+    return { isGameComplete, rank };
   },
-};
+});
 </script>
 
 <style>

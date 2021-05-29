@@ -7,9 +7,10 @@
   />
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent } from "vue";
 import { PhX, PhHeartStraight, PhClub, PhSpade, PhDiamond } from "phosphor-vue";
-export default {
+export default defineComponent({
   props: { card: String, size: Number },
   computed: {
     cardIcon() {
@@ -27,7 +28,5 @@ export default {
       }
     },
   },
-};
+});
 </script>
-
-<style></style>

@@ -12,47 +12,60 @@
     <div
       @click="throwCard"
       v-if="
-        !disableSelection && name != 'hidden' && !bidMode && turn == playerId
+        !disableSelection &&
+        name != 'hidden' &&
+        !isBiddingActive &&
+        turnOf == playerId
       "
       class="absolute cursor-pointer top-0 left-0 h-full w-full hover:bg-yellow-200 rounded-lg opacity-25"
     ></div>
   </div>
 </template>
 
-<script>
-import { mapActions, mapState } from "vuex";
-export default {
+<script lang="ts">
+import { computed, defineComponent, PropType, toRefs, inject } from "vue";
+import { Socket } from "socket.io-client";
+import state from "../store";
+export default defineComponent({
   props: {
-    name: { type: String, default: "hidden" },
-    disableSelection: Boolean,
+    name: { type: String as PropType<string>, default: "hidden" },
+    disableSelection: Boolean as PropType<boolean>,
   },
-  computed: {
-    ...mapState({
-      turn: (state) => state.game.turn,
-      playerId: (state) => state.player.id,
-      bidMode: (state) => state.game.bidding.isActive,
-    }),
-    card() {
-      const images = require.context("../assets/images/cards", false, /\.png$/);
-      if (this.name == "hidden") return images("./purple_back.png");
-      return images(
-        "./" +
-          this.name
-            .split("-")
-            .reverse()
-            .join("") +
-          ".png"
-      );
-    },
+  setup(props) {
+    const { name, disableSelection } = toRefs(props);
+    const playerId = computed(() => state?.currentUser?.id);
+    const turnOf = computed(() => state?.turnOf);
+    const isBiddingActive = computed(() => state?.isBiddingActive);
+    const card = computed(() => {
+      const folder = "../assets/images/cards/";
+      const images = import.meta.globEager("../assets/images/cards/*.png");
+      if (name.value == "hidden")
+        return images[folder + "purple_back.png"].default;
+      return images[folder + name.value.split("-").reverse().join("") + ".png"]
+        .default;
+    });
+
+    const socket = inject<Socket>("socket");
+    const throwCard = () => {
+      if (socket) {
+        socket.emit("throwCard", {
+          gameId: state.id,
+          playerId: state.currentUser?.id || localStorage.getItem("pid"),
+          card: name.value,
+        });
+      }
+    };
+    return {
+      name,
+      card,
+      disableSelection,
+      throwCard,
+      playerId,
+      turnOf,
+      isBiddingActive,
+    };
   },
-  methods: {
-    ...mapActions({ setTurn: "changeTurn" }),
-    throwCard() {
-      this.setTurn("");
-      this.$socket.emit("throwCard", { card: this.name });
-    },
-  },
-};
+});
 </script>
 
 <style lang="scss">

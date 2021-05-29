@@ -1,48 +1,56 @@
 <template>
-  <div
-    :class="[
-      'flex px-1 justify-center',
-      vertical ? 'flex-col mt-10 max-h-full' : 'ml-8',
-    ]"
-  >
+  <div :class="['flex px-1 justify-center pl-5']">
     <single-card
       v-for="card in sortedCards"
-      :disableSelection="disableSelection || !isThrowable(card)"
-      :name="typeof card == 'string' ? card : undefined"
+      :disableSelection="
+        disableSelection || typeof card == 'number' ? false : !isThrowable(card)
+      "
+      :name="card"
       :key="card"
-      :class="[vertical ? '-mt-14 vertical-card' : '-ml-6']"
-    />
+      :class="['-ml-6']"
+    ></single-card>
   </div>
 </template>
 
-<script>
-import SingleCard from "./SingleCard";
-export default {
+<script lang="ts">
+import { defineComponent, computed, toRefs, PropType } from "vue";
+import SingleCard from "./SingleCard.vue";
+import gameState from "../store";
+
+export default defineComponent({
   components: { SingleCard },
   props: {
-    cards: { type: [Array, Number] },
-    disableSelection: { type: Boolean },
-    vertical: Boolean,
-    throwable: Array,
+    cards: {
+      type: [Array, Number] as PropType<readonly string[] | number>,
+      required: true,
+    },
+    disableSelection: { type: Boolean as PropType<boolean> },
+    throwable: Array as PropType<readonly string[]>,
   },
-  computed: {
-    sortedCards() {
-      if (typeof this.cards == "object") {
-        return this.cards.sort().sort((a, b) => {
-          let aVal = a.split("-");
-          let bVal = b.split("-");
-          if (aVal[0] != bVal[0]) return 0;
-          return parseInt(aVal[1]) - parseInt(bVal[1]);
-        });
+
+  setup(props) {
+    const { cards, disableSelection, throwable } = toRefs(props);
+
+    const sortedCards = computed(() => {
+      if (typeof cards.value == "number") {
+        return Array(cards.value).fill("hidden");
       }
-      return this.cards;
-    },
+      return [...cards.value].sort().sort((a, b) => {
+        let aVal = a.split("-");
+        let bVal = b.split("-");
+        if (aVal[0] != bVal[0]) return 0;
+        return parseInt(aVal[1]) - parseInt(bVal[1]);
+      });
+    });
+
+    const isGameOnHold = computed(() => gameState.onHold);
+    const isThrowable = (card: string) => {
+      if (isGameOnHold.value) return false;
+      return throwable?.value?.includes(card);
+    };
+
+    return { sortedCards, isThrowable, disableSelection };
   },
-  methods: {
-    isThrowable(card) {
-      return typeof card == "string" ? this.throwable.includes(card) : false;
-    },
-  },
-};
+});
 </script>
 

@@ -1,39 +1,38 @@
 {
   "name": "oh-hell",
-  "version": "0.1.0",
-  "private": true,
+  "version": "0.0.0",
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "server": "nodemon --watch server server/index.js",
-    "start": "node server/index.js"
+    "dev": "vite",
+    "dev:server": "nodemon server/index.ts",
+    "build": "vue-tsc --noEmit && vite build",
+    "serve": "vite preview",
+    "start": "tsc-node server/index.ts"
   },
   "dependencies": {
-    "autoprefixer": "^9.8.6",
+    "@harlem/core": "^1.3.1",
+    "@harlem/plugin-devtools": "^1.3.1",
     "connect-history-api-fallback": "^1.6.0",
-    "core-js": "^3.6.5",
-    "cors": "^2.8.5",
-    "dotenv": "^8.2.0",
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
-    "phosphor-vue": "^1.0.0",
-    "postcss": "^7.0.35",
+    "phosphor-vue": "^4.2.1",
     "shortid": "^2.2.16",
-    "socket.io": "^3.0.3",
-    "socket.io-client": "^3.0.3",
-    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.0.1",
-    "vue": "^2.6.11",
-    "vue-router": "^3.2.0",
-    "vue-socket.io": "^3.0.10",
-    "vuex": "^3.4.0"
+    "socket.io": "^4.1.2",
+    "socket.io-client": "^4.1.2",
+    "vue": "^3.0.5",
+    "vue-router": "^4.0.8"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "~4.5.0",
-    "@vue/cli-plugin-router": "~4.5.0",
-    "@vue/cli-plugin-vuex": "~4.5.0",
-    "@vue/cli-service": "~4.5.0",
-    "node-sass": "^4.12.0",
-    "nodemon": "^2.0.6",
-    "sass-loader": "^8.0.2",
-    "vue-template-compiler": "^2.6.11"
+    "@types/node": "^15.0.2",
+    "@vitejs/plugin-vue": "^1.2.2",
+    "@vue/compiler-sfc": "^3.0.5",
+    "autoprefixer": "^10.2.6",
+    "nodemon": "^2.0.7",
+    "postcss": "^8.3.0",
+    "sass": "^1.34.0",
+    "tailwindcss": "^2.1.2",
+    "ts-node": "^10.0.0",
+    "typescript": "^4.1.3",
+    "vite": "^2.3.4",
+    "vue-tsc": "^0.0.24"
   }
 }
