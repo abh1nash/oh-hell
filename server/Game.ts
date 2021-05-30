@@ -44,7 +44,9 @@ export default class OhHellGame {
   }
 
   get turnOf() {
-    return this.__currentHand?.turn;
+    return this.__currentHand
+      ? this.__currentHand.turn
+      : this.playersList()[0].id;
   }
 
   get isBiddingActive() {
@@ -69,6 +71,10 @@ export default class OhHellGame {
     return this.isBiddingActive && this.__currentHand
       ? this.__currentHand.unavailableBids
       : [];
+  }
+
+  isInGame(playerId: string) {
+    return this.__playersList.map((player) => player.id).includes(playerId);
   }
 
   joinGame(name: string, id: string) {

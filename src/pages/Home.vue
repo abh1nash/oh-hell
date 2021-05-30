@@ -42,11 +42,9 @@ export default defineComponent({
     const router = useRouter();
 
     const createGame = () => {
-      let id: string | null = null;
-      if (localStorage.getItem("pid")) id = localStorage.getItem("pid");
       socket?.emit("createGame", {
         playersCount: gameDetails.playersCount,
-        initiator: { name: gameDetails.name, id },
+        initiator: { name: gameDetails.name },
       });
       socket?.on(
         "createdGame",

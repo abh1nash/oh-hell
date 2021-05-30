@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="bottom && player == turnOf && !isGameOnHold"
+    v-if="bottom && turnOf == currentUserId && !isGameOnHold"
     class="absolute w-full text-center -mt-6 animate-bounce font-bold uppercase text-white"
   >
     Your Turn
@@ -45,15 +45,12 @@ export default defineComponent({
     left: Boolean as PropType<boolean>,
     right: Boolean as PropType<boolean>,
     bottom: Boolean as PropType<boolean>,
-    player: String as PropType<string>,
+    player: { type: String as PropType<string>, required: true },
   },
   setup(props) {
     const { player, top, left, right, bottom } = toRefs(props);
     const playerData = computed(
-      () =>
-        gameState.playersList?.filter(
-          (user) => user.id == (player?.value || localStorage.getItem("pid"))
-        )[0]
+      () => gameState.playersList?.filter((user) => user.id == player.value)[0]
     );
     const isGameOnHold = computed(() => gameState.onHold);
     const throwable = computed(() => gameState.currentUser?.throwable);

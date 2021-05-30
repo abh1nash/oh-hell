@@ -16,7 +16,6 @@ export const setPlayerLayout = mutation(
 
     if (currentUserId && playersList) {
       const idx = playersList.indexOf(currentUserId);
-
       let layout = playersList;
 
       if (idx > -1) {

@@ -36,13 +36,13 @@ io.on("connection", (socket) => {
     const gameId = games.push(
       new Game(playersCount, {
         name: initiator.name,
-        id: initiator.id || socket.id,
+        id: initiator.id ? initiator.id : socket.id,
       })
     );
     console.log(`Created Game: ${gameId + 1}`);
     socket.join(gameId - 1);
     socket.emit("createdGame", {
-      playerId: initiator.id || socket.id,
+      playerId: initiator.id ? initiator.id : socket.id,
       gameId: gameId - 1,
     });
   });

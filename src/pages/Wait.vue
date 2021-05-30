@@ -53,10 +53,11 @@ export default defineComponent({
     if (!id) router.push({ name: "Home" });
 
     const socket = inject<Socket>("socket");
-    const requester = localStorage.getItem("pid") || undefined;
+    const requester = localStorage.getItem("pid");
+
     if (socket) {
       socket.emit("checkGame", {
-        requesterId: requester || socket.id,
+        requesterId: requester ? requester : socket.id,
         gameId: id,
       });
     }
@@ -76,7 +77,7 @@ export default defineComponent({
     const joinGame = () => {
       socket?.emit("joinGame", {
         gameId: id,
-        playerId: requester || socket.id,
+        playerId: requester ? requester : socket.id,
         name: playerName.value,
       });
     };

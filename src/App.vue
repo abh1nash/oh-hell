@@ -11,7 +11,8 @@ export default defineComponent({
   name: "App",
   components: {},
   setup() {
-    const connection = io(import.meta.env.VITE_SOCKET_URL);
+    const socketURL = import.meta.env.VITE_SOCKET_URL;
+    const connection = io(socketURL as string);
     provide("socket", connection);
 
     connection.on("gameState", ({ data }) => {

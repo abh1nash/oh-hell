@@ -20,6 +20,7 @@ export interface GameState {
   thrownCards?: { [playerId: string]: string };
   currentUser?: {
     id: string;
+    isInGame?: boolean;
     name?: string;
     throwable?: string[];
     unavailableBids?: number[];

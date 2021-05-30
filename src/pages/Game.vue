@@ -18,7 +18,9 @@ export default defineComponent({
     const router = useRouter();
     const socket = inject<Socket>("socket");
     if (!id) router.push({ name: "Home" });
-    const requesterId = localStorage.getItem("pid") || socket?.id;
+    const requesterId = localStorage.getItem("pid")
+      ? localStorage.getItem("pid")
+      : socket?.id;
     if (socket) {
       socket.emit("checkGame", {
         requesterId: requesterId,

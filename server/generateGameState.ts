@@ -23,6 +23,7 @@ export default function generateGameState(
     playersList: game.playersList(requesterId),
     currentUser: {
       id: requesterId,
+      isInGame: game.isInGame(requesterId),
       name: currentUser ? currentUser.name : undefined,
       throwable: currentUser ? currentUser.throwable : undefined,
       unavailableBids: game.unavailableBids,
