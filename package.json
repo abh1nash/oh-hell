@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "vite",
     "dev:server": "nodemon server/index.ts",
-    "build": "vue-tsc --noEmit && vite build && tsc -t esnext server/index.ts",
+    "build": "vue-tsc --noEmit && vite build && tsc -t es5 server/index.ts",
     "serve": "vite preview",
     "start": "node server/index.js"
   },
