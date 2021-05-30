@@ -30,7 +30,7 @@ export default function usePlayerPosition() {
         .filter((item) => parseInt(item.charAt(2)) == gameSize.value)[0]
         .split("/")[0];
       return layout.value[parseInt(playerIndex) - 1];
-    }
+    } else return "undefined";
   };
   return { isDisplayed, playerPositions, getPlayer };
 }
