@@ -15,7 +15,7 @@ export default class OhHellGame {
     private readonly initiator: { name: string; id: string }
   ) {
     this.__playersList = [];
-    this.__handCardsCount = Math.min(3, Math.floor(52 / this.playersCount));
+    this.__handCardsCount = Math.min(13, Math.floor(52 / this.playersCount));
     this.__lastHandThrows = {};
     this.__currentHand = undefined;
     this.__lastTurn = undefined;
