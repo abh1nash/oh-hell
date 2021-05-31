@@ -14,8 +14,17 @@ class Hand {
 
   constructor(
     private readonly playersList: Player[],
-    private cardsCount: number
+    private cardsCount: number,
+    private turnOf?: string
   ) {
+    this.__turn = 0;
+
+    if (this.turnOf) {
+      this.__turn = this.playersList
+        .map((player) => player.id)
+        .indexOf(this.turnOf);
+    }
+
     this.playersList.forEach((player) => {
       player.resetCards();
     });

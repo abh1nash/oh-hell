@@ -6,6 +6,7 @@ export default class OhHellGame {
   private __handCardsCount: number;
   private __currentHand: Hand | undefined;
   private __lastHandThrows: { [player: string]: string } | {};
+  private __lastTurn?: string;
 
   public isComplete: boolean = false;
 
@@ -14,9 +15,10 @@ export default class OhHellGame {
     private readonly initiator: { name: string; id: string }
   ) {
     this.__playersList = [];
-    this.__handCardsCount = Math.min(13, Math.floor(52 / this.playersCount));
+    this.__handCardsCount = Math.min(3, Math.floor(52 / this.playersCount));
     this.__lastHandThrows = {};
     this.__currentHand = undefined;
+    this.__lastTurn = undefined;
     this.joinGame(this.initiator.name, this.initiator.id);
   }
 
@@ -44,9 +46,11 @@ export default class OhHellGame {
   }
 
   get turnOf() {
-    return this.__currentHand
+    return this.__lastTurn
+      ? this.__lastTurn
+      : this.__currentHand
       ? this.__currentHand.turn
-      : this.playersList()[0].id;
+      : this.__playersList[0].id;
   }
 
   get isBiddingActive() {
@@ -86,13 +90,21 @@ export default class OhHellGame {
   startHand() {
     if (this.__currentHand) {
       this.__lastHandThrows = { ...this.__currentHand.thrownCards };
-      setTimeout(() => (this.__lastHandThrows = {}), 1000);
+      this.__lastTurn = this.__currentHand.turn;
+      setTimeout(() => {
+        this.__lastHandThrows = {};
+      }, 1000);
     }
-    this.__currentHand = new Hand(this.__playersList, this.__handCardsCount);
+    this.__currentHand = new Hand(
+      this.__playersList,
+      this.__handCardsCount,
+      this.__lastTurn
+    );
   }
 
   setBid(playerId: string, bid: number) {
     this.__currentHand?.setBid(playerId, bid);
+    if (this.__lastTurn) this.__lastTurn = undefined;
   }
 
   throw(playerId: string, card: string) {

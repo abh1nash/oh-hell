@@ -4,9 +4,9 @@
   "scripts": {
     "dev": "vite",
     "dev:server": "nodemon server/index.ts",
-    "build": "vue-tsc --noEmit && vite build && tsc -t es5 server/index.ts",
+    "build": "vue-tsc --noEmit && vite build && tsc -t es5 server/index.ts --outDir serverJs",
     "serve": "vite preview",
-    "start": "node server/index.js"
+    "start": "node serverJs/server/index.js"
   },
   "dependencies": {
     "@harlem/core": "^1.3.1",
