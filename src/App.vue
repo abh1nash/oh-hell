@@ -16,7 +16,8 @@ export default defineComponent({
     provide("socket", connection);
 
     connection.on("connect", () => {
-      localStorage.setItem("pid", connection.id);
+      if (!localStorage.getItem("pid"))
+        localStorage.setItem("pid", connection.id);
     });
 
     connection.on("gameState", ({ data }) => {

@@ -39,7 +39,7 @@ io.on("connection", (socket) => {
         id: initiator.id ? initiator.id : socket.id,
       })
     );
-    console.log(`Created Game: ${gameId + 1}`);
+    console.log(`Created Game: ${gameId - 1}`);
     socket.join(gameId - 1);
     socket.emit("createdGame", {
       playerId: initiator.id ? initiator.id : socket.id,
