@@ -15,6 +15,10 @@ export default defineComponent({
     const connection = io(socketURL as string);
     provide("socket", connection);
 
+    connection.on("connect", () => {
+      localStorage.setItem("pid", connection.id);
+    });
+
     connection.on("gameState", ({ data }) => {
       setGameData(reactive(data));
       localStorage.setItem("gid", data.id);

@@ -14,7 +14,7 @@
         { 'w-20 mx-auto': top },
         { 'w-20 ml-8': left },
         { 'w-20 -ml-8': right },
-        { 'w-96 mx-auto pl-7': bottom },
+        { 'w-full mx-auto pl-7': bottom },
       ]"
     />
     <div
