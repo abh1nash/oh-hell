@@ -103,12 +103,12 @@ export default class OhHellGame {
   }
 
   setBid(playerId: string, bid: number) {
-    this.__currentHand?.setBid(playerId, bid);
+    if (this.turnOf == playerId) this.__currentHand?.setBid(playerId, bid);
     if (this.__lastTurn) this.__lastTurn = undefined;
   }
 
   throw(playerId: string, card: string) {
-    this.__currentHand?.throw(playerId, card);
+    if (this.turnOf == playerId) this.__currentHand?.throw(playerId, card);
 
     if (this.__currentHand?.isComplete) {
       this.__handCardsCount--;
