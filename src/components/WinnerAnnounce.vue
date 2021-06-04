@@ -2,6 +2,7 @@
   <div
     v-if="isGameComplete"
     class="fixed overflow-hidden top-0 left-0 h-screen w-screen"
+    role="alert"
   >
     <div
       class="absolute left-0 top-0 h-screen w-screen bg-black opacity-25"

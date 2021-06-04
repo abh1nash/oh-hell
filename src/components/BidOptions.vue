@@ -1,8 +1,10 @@
 <template>
   <div
     v-if="isBiddingTurn"
+    role="alert"
     class="fixed overflow-hidden top-0 left-0 h-screen w-screen"
   >
+    <div class="sr-only">It is your turn to bid.</div>
     <div
       class="absolute left-0 top-0 h-screen w-screen bg-black opacity-25"
     ></div>

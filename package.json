@@ -2,7 +2,7 @@
   "name": "oh-hell",
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "dev:server": "nodemon server/index.ts",
     "build": "vue-tsc --noEmit && vite build && tsc -t es5 server/index.ts --outDir serverJs",
     "serve": "vite preview",

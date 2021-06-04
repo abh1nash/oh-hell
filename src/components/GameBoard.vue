@@ -1,4 +1,5 @@
 <template>
+  <s-r-text></s-r-text>
   <div class="h-full w-full bg-green-600 flex items-center justify-center">
     <div class="game-area">
       <div class="h-14 w-full bg-green-300 flex">
@@ -39,6 +40,7 @@ import GameStage from "./GameStage.vue";
 import BidOptions from "./BidOptions.vue";
 import ThrownHistory from "./ThrownHistory.vue";
 import WinnerAnnounce from "./WinnerAnnounce.vue";
+import SRText from "./SRText.vue";
 
 export default defineComponent({
   components: {
@@ -47,6 +49,7 @@ export default defineComponent({
     BidOptions,
     WinnerAnnounce,
     ThrownHistory,
+    SRText,
   },
   setup() {
     const playersList = computed(() => gameState.playersList);

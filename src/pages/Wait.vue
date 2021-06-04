@@ -2,7 +2,7 @@
   <div
     class="flex flex-col bg-gray-200 h-screen w-screen items-center justify-center"
   >
-    <div class="w-full md:w-1/4">
+    <div class="w-full md:w-1/4" role="status">
       <div class="text-gray-500 text-center">
         <div>Game #{{ id }}</div>
         <div class="text-2xl text-gray-700">
