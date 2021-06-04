@@ -108,6 +108,7 @@ export default defineComponent({
     const socket = inject<Socket>("socket");
     const gameId = computed(() => gameState.id);
     watch(throws, (newVal) => {
+      if (gameState.isComplete) return;
       newVal = { ...newVal };
       if (Object.keys(newVal).length == gameState.gameSize) {
         setGameOnHold();
