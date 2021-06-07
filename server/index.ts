@@ -48,8 +48,9 @@ io.on("connection", (socket) => {
   });
 
   socket.on("checkGame", ({ gameId, requesterId }) => {
+    if (requesterId && !socket.rooms.has(requesterId)) socket.join(requesterId);
     if (!!games[gameId]) {
-      socket.join(gameId);
+      if (!socket.rooms.has(gameId)) socket.join(gameId);
       // socket.to(gameId).emit("gameEvent");
       socket.emit("gameState", {
         data: generateGameState(requesterId, gameId, games[gameId]),
