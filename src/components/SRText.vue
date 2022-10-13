@@ -1,7 +1,9 @@
 <template>
-  <div class="sr-only" role="status">
+  <div class="sr-only" role="status" @keydown.t="requestCurrentTrump" tabindex="-1"
+  @keydown="reportPlayerStats_all($event)">
     Game #{{ gameId }}
     <br />
+    
     Current mode: {{ isBiddingActive ? "Bidding" : "Playing" }}
     <ul>
       <li v-for="player in playersList" :key="player.id">
@@ -10,12 +12,11 @@
         }}.
       </li>
     </ul>
-    <span>Current trump is {{ trump }}.</span>
+    <span>current trump is {{trump}}</span>
     <span v-if="cardsOnHand">
       You have the following cards:
       <ul>
         <li v-for="card in cardsOnHand" :key="card">
-          {{ cardName(card) }}
           <button
             :disabled="
               isBiddingActive ||
@@ -24,7 +25,8 @@
             "
             @click="throwCard(card)"
           >
-            Throw
+            Throw           {{ cardName(card) }}
+
           </button>
         </li>
       </ul>
@@ -60,15 +62,36 @@
   <div class="sr-only" v-else role="status">
     Current turn of {{ turnOf?.name }}.
   </div>
+  <div aria-live="polite" class="sr-only"  ref="announcementOnKeyPress">
+    <span>
+    {{announcementOnKeypress}}</span>
+     </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, inject, watch } from "@vue/runtime-core";
+import { computed, defineComponent, inject, ref, watch } from "@vue/runtime-core";
 import { Socket } from "socket.io-client";
+import AppVue from "../App.vue";
 import gameState from "../store";
 
 export default defineComponent({
   setup() {
+    const requestCurrentTrump = () =>{
+      announcementOnKeypress.value = "current trump is " + trump.value;
+      setTimeout(() => {
+        announcementOnKeypress.value = "";
+      }, 500);
+    };
+    const reportPlayerStats_all = (event) => {
+      let eventKey = parseInt(event.key) - 1;
+      if (eventKey <= playersList.value.length) {
+        announcementOnKeypress.value = playersList.value[eventKey].name + ": " + "score: " + playersList.value[eventKey].score + ", " + "bids: " + playersList.value[eventKey].stats.bid + ", " + "tricks: " + playersList.value[eventKey].stats.tricks + ".";
+      }
+            setTimeout(() => {
+        announcementOnKeypress.value = "";
+      }, 500);
+
+    };
     const gameId = computed(() => gameState.id);
     const playersList = computed(() => gameState.playersList || []);
     const currentUser = computed(() => gameState.currentUser);
@@ -88,8 +111,8 @@ export default defineComponent({
       }
       return undefined;
     });
+    let announcementOnKeypress = ref("");
     const isBiddingActive = computed(() => gameState.isBiddingActive);
-
     const cardName = (card?: string) => {
       if (!card) return;
       const faceCards = "Jack,Queen,King,Ace".split(",");
@@ -167,6 +190,9 @@ export default defineComponent({
       }
     };
     return {
+      announcementOnKeypress,
+      reportPlayerStats_all,
+     requestCurrentTrump,
       throwCard,
       lastThrownCards,
       gameId,
