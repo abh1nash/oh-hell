@@ -2,11 +2,11 @@
   "name": "oh-hell",
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "dev:server": "nodemon server/index.ts",
-    "build": "vue-tsc --noEmit && vite build",
+    "build": "vue-tsc --noEmit && vite build && tsc -t es5 server/index.ts --outDir serverJs",
     "serve": "vite preview",
-    "start": "tsc-node server/index.ts"
+    "start": "node serverJs/server/index.js"
   },
   "dependencies": {
     "@harlem/core": "^1.3.1",
